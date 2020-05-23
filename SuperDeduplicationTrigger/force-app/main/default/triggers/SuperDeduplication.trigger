@@ -9,7 +9,7 @@ trigger SuperDeDuplication on Lead (before insert) {
         //searching for matching contacts
         // store results of SOQL query in a list
         List<Contact> matchingContacts = [SELECT Id,
-                                                 FirstName, 
+                                                 FirstName , 
                                                  LastName,
                                                  Account.Name
                                             FROM Contact
@@ -44,6 +44,6 @@ trigger SuperDeDuplication on Lead (before insert) {
 
 
 // Expand dedup logic to also include all of the criteria
-// first names begin with the same letter as lead
-// last names are identical
-// the existing record contains the new record's company name
+// contact first names begin with the same letter as lead
+// contact last names are identical
+// the contacts account name contains the leads company
