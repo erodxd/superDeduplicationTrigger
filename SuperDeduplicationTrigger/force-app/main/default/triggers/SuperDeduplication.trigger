@@ -1,4 +1,4 @@
-trigger DeDupeLead on Lead (before insert) {
+trigger SuperDeDuplication on Lead (before insert) {
     List<Group> dataQualityGroups = [SELECT Id     // queues are stored in the Group SObject
                                        FROM Group  // get it ready for future use
                                       WHERE DeveloperName = 'Data_Quality'
