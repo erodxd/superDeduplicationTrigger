@@ -6,6 +6,14 @@ trigger SuperDeDuplication on Lead (before insert) {
 
     for (Lead myLead : Trigger.new) {
         if (myLead.Email != null) {
+        // Prepare bind variables
+            String firstNameMatch;
+            if (myLead.FirstName != null) {
+                firstNameMatch = myLead.FirstName.substring(0, 1) + '%';
+            }
+            String companyMatch = '%' + myLead.Company + '%';
+        
+        
         //searching for matching contacts
         // store results of SOQL query in a list
         List<Contact> matchingContacts = [SELECT Id,
@@ -13,7 +21,12 @@ trigger SuperDeDuplication on Lead (before insert) {
                                                  LastName,
                                                  Account.Name
                                             FROM Contact
-                                           WHERE Email = :myLead.Email]; // WHERE Contact email = Lead email
+                                           WHERE (Email != null
+                                             AND  Email = :myLead.Email)
+                                             OR (FirstName != null
+                                             AND FirstName LIKE :firstNameMatch
+                                             AND LastName = :myLead.LastName
+                                             AND Account.Name LIKE :companyMatch)]; // WHERE Contact email = Lead email
 
         System.debug(matchingContacts.size() + ' contact(s) found.'); // debug message showing how many were found
         // if matches are found...
